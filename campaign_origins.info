@@ -1,0 +1,5 @@
+; $Id$
+name = Campaign Origins
+description = "Campaign Origin Module allows you to track campaign origination."
+package = "Analytics"
+core = 6.x
