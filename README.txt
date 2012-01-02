@@ -23,8 +23,6 @@ Install
 
 4) Go here (settings/campaign-origins/add-campaign-origins) to add a new origin code ('facebook' for example).
 
-5) To allow your website to accept origin codes, setup your link structure as such 
-	 http://example.com/signup?origin=facebook.
+5) To allow your website to accept origin codes, setup your link structure as such http://example.com/signup?origin=facebook.
 
-6) Just hook into the form that you want to document the conversion and call this function to document a conversion
-	 campaign_origins_save_origin('donation_form', $id);
+6) Just hook into the form that you want to document the conversion and call this function to document a conversion campaign_origins_save_origin('donation_form', $id);
