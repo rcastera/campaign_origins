@@ -309,11 +309,11 @@ function campaign_origins_show_origin_report() {
   }
   
   if ($_REQUEST['origin']) {
-    $sql = "SELECT o.origin, t.node_id, t.form_name, t.form_record_id, t.created FROM {sanky_campaign_origins} o LEFT JOIN {sanky_campaign_origins_tracking} t ON t.campaign_origins_id = o.id".$origin.$start.$end;
+    $sql = "SELECT o.origin, t.node_id, t.form_name, t.form_record_id, t.created FROM {campaign_origins} o LEFT JOIN {campaign_origins_tracking} t ON t.campaign_origins_id = o.id".$origin.$start.$end;
     $count = "SELECT COUNT(*) FROM {campaign_origins} o LEFT JOIN {campaign_origins_tracking} t ON t.campaign_origins_id = o.id".$origin.$start.$end;  
   }
   else {
-    $sql = "SELECT o.origin, t.node_id, t.form_name, t.form_record_id, t.created FROM {sanky_campaign_origins} o LEFT JOIN {sanky_campaign_origins_tracking} t ON t.campaign_origins_id = o.id".$start.$end;
+    $sql = "SELECT o.origin, t.node_id, t.form_name, t.form_record_id, t.created FROM {campaign_origins} o LEFT JOIN {campaign_origins_tracking} t ON t.campaign_origins_id = o.id".$start.$end;
     $count = "SELECT COUNT(*) FROM {campaign_origins} o LEFT JOIN {campaign_origins_tracking} t ON t.campaign_origins_id = o.id".$start.$end;
   }
   
