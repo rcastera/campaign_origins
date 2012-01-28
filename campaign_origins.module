@@ -27,9 +27,9 @@ function campaign_origins_perm() {
 /**
  * Implements of hook_init().
  */
-function campaign_origins_init() {	
-  if (user_access('track with campaign origins') ) {
-    if (isset($_GET['origin']) && !empty($_GET['origin'])) {	
+function campaign_origins_init() {
+  if (user_access('track with campaign origins')) {
+    if (isset($_GET['origin']) && !empty($_GET['origin'])) {
       $origin_code = trim(strip_tags($_GET['origin']));
       campaign_origins_set_cookie($origin_code);
     }
@@ -39,7 +39,7 @@ function campaign_origins_init() {
 /**
  * Implements of hook_menu().
  */
-function campaign_origins_menu() {	
+function campaign_origins_menu() {
   $items['admin/settings/campaign-origins'] = array(
     'title' => 'Campaign Origins Settings',
     'description' => 'Modify settings for Campaign Origins.',
@@ -93,35 +93,28 @@ function campaign_origins_menu() {
 /**
  * Sets/appends a new origin code to the cookie.
  *
- * @param string $origin
+ * @param string $origin_code
  *   A string containing an origin code.
  */
 function campaign_origins_set_cookie($origin_code) {
   // Get existing tracking information stored in cookie.
   $existing_tracking = isset($_COOKIE['campaign_origins']) ? $_COOKIE['campaign_origins']:'';
-  
   // Load the Node object.
   $node_id = 0;
   if (arg(0) == 'node' && is_numeric(arg(1))) {
     $node = node_load(arg(1));
     $node_id = isset($node->nid) ? $node->nid:0; 
   }
-  
   // Get the time landed on the page. 
   $time_in = time();
-  
   // Create a string with origin data tokens
   $origin_tracking = implode(',', array($origin_code, $node_id, $time_in));
-  
   // Destroy the cookie.
   setcookie('campaign_origins', '', time()-3600, '/', $_SERVER['SERVER_NAME']);
-
   // Get Expiration in days.
   $expiration = (time()+60*60*24*variable_get('campaign_origins_expiration', 7));
-
   // Set a new cookie with additional origin code.
   setcookie('campaign_origins', $origin_tracking, $expiration, '/', $_SERVER['SERVER_NAME']);
-
   // Make the cookie data available to other functions immediately (instead of next page load)
   $_COOKIE['campaign_origins'] = $origin_tracking;
 }
@@ -135,6 +128,8 @@ function campaign_origins_save_origin($form_name = '', $form_record_id = '') {
   if ($origin_tracking) {
     $origin_fields = explode(',', $origin_tracking); 
     $origin_code_id = db_result(db_query("SELECT id FROM {campaign_origins} WHERE origin = '%s'", $origin_fields[0]));    
-    db_query("INSERT INTO {campaign_origins_tracking} (campaign_origins_id, node_id, form_name, form_record_id, created) VALUES (%d, %d, '%s', %d, %d)", $origin_code_id, $origin_fields[1], $form_name, $form_record_id, $origin_fields[2]);
+    db_query("INSERT INTO {campaign_origins_tracking} 
+    					(campaign_origins_id, node_id, form_name, form_record_id, created) 
+    					VALUES (%d, %d, '%s', %d, %d)", $origin_code_id, $origin_fields[1], $form_name, $form_record_id, $origin_fields[2]);
   }
 }

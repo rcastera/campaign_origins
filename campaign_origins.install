@@ -15,7 +15,7 @@ function campaign_origins_install() {
  * Implements of hook_uninstall().
  */
 function campaign_origins_uninstall() {
-  variable_del('campaign_origins_expiration');  
+  variable_del('campaign_origins_expiration');
   drupal_uninstall_schema('campaign_origins');
 }
 
@@ -105,6 +105,5 @@ function campaign_origins_schema() {
       'form_record_id' => array('form_record_id'),
     ),
   );
-  
   return $schema;
 }
