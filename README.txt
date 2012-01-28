@@ -10,19 +10,24 @@ needs cookies to function.
  * Keep track and report on a full inventory of origin codes.
  * Full reporting with filterable and sortable results.
 
-Campaign Origins was written by Richard Castera (http://drupal.org/node/830660).
-
 Install
 -----------------------
 
-1) Copy the campaign_origins folder to the modules folder in your installation.
+1) Copy the campaign_origins folder to the modules folder in your
+   installation.
 
-2) Enable the module using Administer -> Site building -> Modules (/admin/build/modules).
+2) Enable the module using Administer -> Site building -> Modules 
+   (/admin/build/modules).
 
-3) Go to (admin/settings/campaign-origins) to set the number of days the cookie should expire.
+3) Go to (admin/settings/campaign-origins) to set the number of 
+   days the cookie should expire.
 
-4) Go here (settings/campaign-origins/add-campaign-origins) to add a new origin code ('facebook' for example).
+4) Go here (settings/campaign-origins/add-campaign-origins) to add 
+   a new origin code ('facebook' for example).
 
-5) To allow your website to accept origin codes, setup your link structure as such http://example.com/signup?origin=facebook.
+5) To allow your website to accept origin codes, setup your link 
+   structure as such http://example.com/signup?origin=facebook.
 
-6) Just hook into the form that you want to document the conversion and call this function to document a conversion campaign_origins_save_origin('donation_form', $id);
+6) Just hook into the form that you want to document the conversion 
+   and call this function to document a conversion 
+   campaign_origins_save_origin('donation_form', $id);

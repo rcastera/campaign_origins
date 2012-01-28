@@ -1,6 +1,4 @@
 <?php
-// $Id$
-
 /**
  * @file
  * Administer.
@@ -10,7 +8,7 @@
 
 /**
  * Settings form to modify expiration date of cookie.
- */ 
+ */
 function campaign_origins_admin_settings() {
   drupal_set_title(t('Campaign Origins Expiration'));
   
@@ -19,15 +17,15 @@ function campaign_origins_admin_settings() {
     '#title' => t('Days'),
     '#default_value' => variable_get('campaign_origins_expiration', 7),
     '#description' => t('Days the cookie will expire. If set to 0, the cookie will expire at the end of the session (when the browser closes).'),
-    '#required' => TRUE
+    '#required' => TRUE,
   );
 
   return system_settings_form($form);
 }
 
 /**
- * Implementation of hook_validate().
- */ 
+ * Implements of hook_validate().
+ */
 function campaign_origins_admin_settings_validate($form, &$form_state) {
   $form_state['values']['campaign_origins_expiration'] = intval($form_state['values']['campaign_origins_expiration']);
   if ((!is_numeric($form_state['values']['campaign_origins_expiration']))) {
@@ -37,7 +35,7 @@ function campaign_origins_admin_settings_validate($form, &$form_state) {
 
 /**
  * Form to document/add new origin code to be tracked. 
- */ 
+ */
 function campaign_origins_admin_add_origin() {
   drupal_set_title(t('Add Campaign Origin'));
   
@@ -48,7 +46,7 @@ function campaign_origins_admin_add_origin() {
     '#size' => 60,
     '#maxlength' => 255,
     '#description' => t('Enter your origin code. (255) characters max. The following characters comma (,) or pipe (|) are not allowed.'),
-    '#required' => TRUE
+    '#required' => TRUE,
   );
   
   $form['campaign_origins_description'] = array(
@@ -58,20 +56,20 @@ function campaign_origins_admin_add_origin() {
     '#size' => 60,
     '#maxlength' => 255,
     '#description' => t('Enter a description for this origin code. (255) characters max.'),
-    '#required' => TRUE
+    '#required' => TRUE,
   );
   
   $form['submit'] = array(
     '#type' => 'submit',
-    '#value' => t('Add')
+    '#value' => t('Add'),
   );
 
   return $form;
 }
 
 /**
- * Implementation of hook_validate().
- */ 
+ * Implements of hook_validate().
+ */
 function campaign_origins_admin_add_origin_validate($form, &$form_state) {
   if ($form_state['values']['campaign_origins_origin'] == '') {
     form_set_error('campaign_origins_origin', t('Please enter an origin code.'));
@@ -79,19 +77,17 @@ function campaign_origins_admin_add_origin_validate($form, &$form_state) {
 }
 
 /**
- * Implementation of hook_submit().
- */ 
+ * Implements of hook_submit().
+ */
 function campaign_origins_admin_add_origin_submit($form, &$form_state) {
   if (strpos($form_state['values']['campaign_origins_origin'], ',') || strpos($form_state['values']['campaign_origins_origin'], '|')) {
     form_set_error('campaign_origins_origin', t('The origin code cannot contain the following characters comma (,) or pipe (|).'));
     return;
   }
-  
   if (db_result(db_query("SELECT COUNT(*) FROM {campaign_origins} WHERE origin = '%s'", $form_state['values']['campaign_origins_origin'])) > 0) {
-    form_set_error('campaign_origins_origin', t('The origin code (' .$form_state['values']['campaign_origins_origin']. ') already exists.'));
+    form_set_error('campaign_origins_origin', t('The origin code (' . $form_state['values']['campaign_origins_origin'] . ') already exists.'));
     return;
   }
-
   db_query("INSERT INTO {campaign_origins} (origin, origin_description, created) VALUES ('%s', '%s', %d)", $form_state['values']['campaign_origins_origin'], $form_state['values']['campaign_origins_description'], time());
   drupal_set_message('Origin code added.', 'status');   
 }
@@ -139,7 +135,7 @@ function campaign_origins_view_origins() {
 }
 
 /**
- * Implementation of hook_theme().
+ * Implements of hook_theme().
  */
 function campaign_origins_theme() {
   return array (
@@ -162,7 +158,7 @@ function theme_campaign_origins_table($table) {
   if ($table['#columns']) {
     $out .= '<thead><tr>';
     foreach ($table['#columns'] as $field) {
-      $out .= '<th>'.$field.'</th>';
+      $out .= '<th>' . $field . '</th>';
     }
     $out .= '</tr></thead>';
   }
@@ -171,9 +167,9 @@ function theme_campaign_origins_table($table) {
   $zebra = 'odd';
   
   foreach ($table['#rows'] as $row) {
-    $out .= '<tr class="'.$zebra.'">';
+    $out .= '<tr class="' . $zebra . '">';
     foreach ($table['#columns'] as $field) {
-      $out .= '<td>'.$row[$field].'</td>';
+      $out .= '<td>' . $row[$field] . '</td>';
     }
     $out .= '</tr>';
     $zebra = ($zebra=='odd')?'even':'odd';
@@ -204,11 +200,11 @@ function theme_campaign_origins_csv($head, $rows) {
     $header_row[] = $field['data'];
   }
   
-  $out = str_putcsv($header_row)."\n";
+  $out = str_putcsv($header_row) . "\n";
   $records = array();
   
   foreach ($rows as $row) {
-    $out .= str_putcsv($row)."\n";
+    $out .= str_putcsv($row) . "\n";
   }
   return $out;
 }
@@ -243,10 +239,10 @@ function campaign_origins_time_range_form() {
   
   
   if ($_REQUEST['sort']) {
-    $form .= '<input type="hidden" name="sort" value="'.$_REQUEST['sort'].'">';
+    $form .= '<input type="hidden" name="sort" value="' . $_REQUEST['sort'] . '">';
   }
   if ($_REQUEST['order']) {
-    $form .= '<input type="hidden" name="order" value="'.$_REQUEST['order'].'">';
+    $form .= '<input type="hidden" name="order" value="' . $_REQUEST['order'] . '">';
   }
   
   $form .= '</div>';
@@ -305,16 +301,16 @@ function campaign_origins_show_origin_report() {
   
   if ($_REQUEST['end']) {
     $end = " AND t.created <= %d";
-    $params[] = strtotime($_REQUEST['end']." +1 day");
+    $params[] = strtotime($_REQUEST['end'] . " +1 day");
   }
   
   if ($_REQUEST['origin']) {
-    $sql = "SELECT o.origin, t.node_id, t.form_name, t.form_record_id, t.created FROM {campaign_origins} o LEFT JOIN {campaign_origins_tracking} t ON t.campaign_origins_id = o.id".$origin.$start.$end;
-    $count = "SELECT COUNT(*) FROM {campaign_origins} o LEFT JOIN {campaign_origins_tracking} t ON t.campaign_origins_id = o.id".$origin.$start.$end;  
+    $sql = "SELECT o.origin, t.node_id, t.form_name, t.form_record_id, t.created FROM {campaign_origins} o LEFT JOIN {campaign_origins_tracking} t ON t.campaign_origins_id = o.id" . $origin . $start . $end;
+    $count = "SELECT COUNT(*) FROM {campaign_origins} o LEFT JOIN {campaign_origins_tracking} t ON t.campaign_origins_id = o.id" . $origin . $start . $end;  
   }
   else {
-    $sql = "SELECT o.origin, t.node_id, t.form_name, t.form_record_id, t.created FROM {campaign_origins} o LEFT JOIN {campaign_origins_tracking} t ON t.campaign_origins_id = o.id".$start.$end;
-    $count = "SELECT COUNT(*) FROM {campaign_origins} o LEFT JOIN {campaign_origins_tracking} t ON t.campaign_origins_id = o.id".$start.$end;
+    $sql = "SELECT o.origin, t.node_id, t.form_name, t.form_record_id, t.created FROM {campaign_origins} o LEFT JOIN {campaign_origins_tracking} t ON t.campaign_origins_id = o.id" . $start . $end;
+    $count = "SELECT COUNT(*) FROM {campaign_origins} o LEFT JOIN {campaign_origins_tracking} t ON t.campaign_origins_id = o.id" . $start . $end;
   }
   
   if ($format == 'csv') {
@@ -358,14 +354,14 @@ function campaign_origins_show_origin_report() {
       if ($_REQUEST['origin']) {$query['origin'] = $_REQUEST['origin'];}
       
       global $pager_total_items;
-      $summary = '<h3>Displaying '.$pager_total_items[0].' records</h3>';
+      $summary = '<h3>Displaying ' . $pager_total_items[0] . ' records</h3>';
       if ($pager_total_items[0] > 0) {
         $page = $_REQUEST['page'] > 0?(int)$_REQUEST['page']+1:1;
-        $top = $page*$limit;
+        $top = $page * $limit;
         $bottom = $top-$limit+1;
-        $summary = '<h3>Displaying '.$bottom.'-'.$top.' of '.$pager_total_items[0].' records</h3>';
+        $summary = '<h3>Displaying ' . $bottom . '-' . $top . ' of ' . $pager_total_items[0] . ' records</h3>';
       }
-      return $summary.'<p>'.l(t('Download as CSV'), 'admin/reports/campaign-origins/csv', array('query' => $query)).'</p>'.campaign_origins_time_range_form().theme('table', $head, $rows).theme('pager', NULL, $limit, 0, NULL, 5);
+      return $summary . '<p>' . l(t('Download as CSV'), 'admin/reports/campaign-origins/csv', array('query' => $query)) . '</p>' . campaign_origins_time_range_form() . theme('table', $head, $rows) . theme('pager', NULL, $limit, 0, NULL, 5);
       break;
   }
   return '';

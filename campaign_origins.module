@@ -1,13 +1,11 @@
 <?php
-// $Id$
-
 /**
  * @file
  * Handles the storage of cookies and campaign origins.
  */
 
 /**
- * Implementation of hook_help().
+ * Implements of hook_help().
  */
 function campaign_origins_help($path, $arg) {
   switch ($path) {
@@ -20,14 +18,14 @@ function campaign_origins_help($path, $arg) {
 }
 
 /**
- * Implementation of hook_perm().
+ * Implements of hook_perm().
  */
 function campaign_origins_perm() {
   return array('administer campaign origins', 'add campaign origins', 'view campaign origins', 'view campaign origins report', 'track with campaign origins');
 }
 
 /**
- * Implementation of hook_init().
+ * Implements of hook_init().
  */
 function campaign_origins_init() {	
   if (user_access('track with campaign origins') ) {
@@ -39,8 +37,8 @@ function campaign_origins_init() {
 }
 
 /**
- * Implementation of hook_menu().
- */ 
+ * Implements of hook_menu().
+ */
 function campaign_origins_menu() {	
   $items['admin/settings/campaign-origins'] = array(
     'title' => 'Campaign Origins Settings',
@@ -51,14 +49,12 @@ function campaign_origins_menu() {
     'file' => 'campaign_origins.admin.inc',
     'weight' => 5,
   );
-  
   $items['admin/settings/campaign-origins/expiration'] = array(
     'title' => 'Campaign Origins Expiration',
     'description' => 'Modify cookie expiration.',
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'weight' => 10,
   );
-  
   $items['admin/settings/campaign-origins/add-campaign-origins'] = array(
     'title' => 'Add Campaign Origin',
     'description' => 'Add new origin code.',
@@ -70,7 +66,6 @@ function campaign_origins_menu() {
     'file' => 'campaign_origins.admin.inc',
     'weight' => 15,
   );
-  
   $items['admin/settings/campaign-origins/view-campaign-origins'] = array(
     'title' => 'View Campaign Origins',
     'description' => 'View campaign origins.',
@@ -81,7 +76,6 @@ function campaign_origins_menu() {
     'file' => 'campaign_origins.admin.inc',
     'weight' => 20,
   );
-  
   $items['admin/reports/campaign-origins'] = array(
 		'title' => 'Campaign Origins',
     'description' => 'View campaign origins report.',

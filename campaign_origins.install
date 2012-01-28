@@ -1,53 +1,51 @@
 <?php
-// $Id$
-
 /**
  * @file
  * Install, update and uninstall functions for the campaign_origins module.
  */
 
 /**
- * Implementation of hook_install().
- */ 
+ * Implements of hook_install().
+ */
 function campaign_origins_install() {
   drupal_install_schema('campaign_origins');
 }
 
 /**
- * Implementation of hook_uninstall().
- */ 
+ * Implements of hook_uninstall().
+ */
 function campaign_origins_uninstall() {
   variable_del('campaign_origins_expiration');  
   drupal_uninstall_schema('campaign_origins');
 }
 
 /**
- * Implementation of hook_schema().
- */ 
+ * Implements of hook_schema().
+ */
 function campaign_origins_schema() {
   $schema['campaign_origins'] = array(
-    'description' => t('Contains each origin code used for a campaign.'),
+    'description' => 'Contains each origin code used for a campaign.',
       'fields' => array(
         'id' => array(
-          'description' => t('Unique auto-increment record identifier.'),
+          'description' => 'Unique auto-increment record identifier.',
           'type' => 'serial',
           'unsigned' => TRUE,
           'not null' => TRUE,
         ),
         'origin' => array(
-          'description' => t('The origin code.'),
+          'description' => 'The origin code.',
           'type' => 'varchar',
           'length' => '255',
           'not null' => TRUE,
         ),
         'origin_description' => array(
-          'description' => t('Description for this origin code.'),
+          'description' => 'Description for this origin code.',
           'type' => 'varchar',
           'length' => '255',
           'not null' => FALSE,
         ),
         'created' => array(
-          'description' => t('When this origin code was created.'),
+          'description' => 'When this origin code was created.',
           'type' => 'int',
           'size' => 'normal',
           'not null' => TRUE,
@@ -59,42 +57,41 @@ function campaign_origins_schema() {
       'origin' => array('origin'),
     ),
   );
-  
   $schema['campaign_origins_tracking'] = array(
-    'description' => t('Contains tracking information of campaign origination.'),
+    'description' => 'Contains tracking information of campaign origination.',
       'fields' => array(
         'id' => array(
-          'description' => t('Unique auto-increment record identifier.'),
+          'description' => 'Unique auto-increment record identifier.',
           'type' => 'serial',
           'unsigned' => TRUE,
           'not null' => TRUE,
         ),
         'campaign_origins_id' => array(
-          'description' => t('The id of the campaign origins tracking table.'),
+          'description' => 'The id of the campaign origins tracking table.',
           'type' => 'int',
           'size' => 'normal',
           'not null' => TRUE,
         ),
         'node_id' => array(
-          'description' => t('The id of the node the campaign origins landed on.'),
+          'description' => 'The id of the node the campaign origins landed on.',
           'type' => 'int',
           'size' => 'normal',
           'not null' => TRUE,
         ),
         'form_name' => array(
-          'description' => t('The name of the conversion form.'),
+          'description' => 'The name of the conversion form.',
           'type' => 'varchar',
           'length' => '255',
           'not null' => FALSE,
         ),
         'form_record_id' => array(
-          'description' => t('The id of the record for the form submission.'),
+          'description' => 'The id of the record for the form submission.',
           'type' => 'int',
           'size' => 'normal',
           'not null' => TRUE,
         ),
         'created' => array(
-          'description' => t('When this entry was created.'),
+          'description' => 'When this entry was created.',
           'type' => 'int',
           'size' => 'normal',
           'not null' => TRUE,
@@ -105,7 +102,7 @@ function campaign_origins_schema() {
     'indexes' => array(
       'campaign_origins_id' => array('campaign_origins_id'),
       'node_id' => array('node_id'),
-      'form_record_id' => array('form_record_id')
+      'form_record_id' => array('form_record_id'),
     ),
   );
   
