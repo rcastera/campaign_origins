@@ -77,17 +77,17 @@ function campaign_origins_menu() {
     'weight' => 20,
   );
   $items['admin/reports/campaign-origins'] = array(
-		'title' => 'Campaign Origins',
-		'description' => 'View campaign origins report.',
-		'page callback' => 'campaign_origins_show_origin_report',
-		'access callback' => 'user_access',
-		'access arguments' => array('view campaign origins report'),
-		'type' => MENU_NORMAL_ITEM,
-		'file' => 'campaign_origins.admin.inc',
-		'weight' => 5,
+	  'title' => 'Campaign Origins',
+	  'description' => 'View campaign origins report.',
+	  'page callback' => 'campaign_origins_show_origin_report',
+	  'access callback' => 'user_access',
+	  'access arguments' => array('view campaign origins report'),
+	  'type' => MENU_NORMAL_ITEM,
+	  'file' => 'campaign_origins.admin.inc',
+	  'weight' => 5,
 	);
 
-  return $items;
+	return $items;
 }
 
 /**
@@ -121,7 +121,7 @@ function campaign_origins_set_cookie($origin_code) {
   // Set a new cookie with additional origin code.
   setcookie('campaign_origins', $origin_tracking, $expiration, '/', $_SERVER['SERVER_NAME']);
 
-  // Make the cookie data available to other functions immediately 
+  // Make the cookie data available to other functions immediately
   // (instead of next page load).
   $_COOKIE['campaign_origins'] = $origin_tracking;
 }
@@ -132,8 +132,8 @@ function campaign_origins_set_cookie($origin_code) {
 function campaign_origins_save_origin($form_name = '', $form_record_id = '') {
   $origin_tracking = isset($_COOKIE['campaign_origins']) ? $_COOKIE['campaign_origins']:'';
   if ($origin_tracking) {
-    $origin_fields = explode(',', $origin_tracking); 
-    $origin_code_id = db_result(db_query("SELECT id FROM {campaign_origins} WHERE origin = '%s'", $origin_fields[0]));    
+    $origin_fields = explode(',', $origin_tracking);
+    $origin_code_id = db_result(db_query("SELECT id FROM {campaign_origins} WHERE origin = '%s'", $origin_fields[0]));
     db_query("INSERT INTO {campaign_origins_tracking} 
     					(campaign_origins_id, node_id, form_name, form_record_id, created) 
     					VALUES (%d, %d, '%s', %d, %d)", $origin_code_id, $origin_fields[1], $form_name, $form_record_id, $origin_fields[2]);

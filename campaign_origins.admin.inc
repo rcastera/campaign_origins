@@ -79,11 +79,11 @@ function campaign_origins_admin_add_origin_submit($form, &$form_state) {
     return;
   }
   if (db_result(db_query("SELECT COUNT(*) FROM {campaign_origins} WHERE origin = '%s'", $form_state['values']['campaign_origins_origin'])) > 0) {
-    form_set_error('campaign_origins_origin', t('The origin code (' . $form_state['values']['campaign_origins_origin'] . ') already exists.'));
+    form_set_error('campaign_origins_origin', t('The origin code ' . $form_state['values']['campaign_origins_origin'] . ' already exists.'));
     return;
   }
   db_query("INSERT INTO {campaign_origins} (origin, origin_description, created) VALUES ('%s', '%s', %d)", $form_state['values']['campaign_origins_origin'], $form_state['values']['campaign_origins_description'], time());
-  drupal_set_message('Origin code added.', 'status');
+  drupal_set_message(t('Origin code added.'), 'status');
 }
 
 /**
@@ -101,7 +101,6 @@ function campaign_origins_view_origins() {
 
   $sql = 'SELECT * FROM {campaign_origins}';
   $sql_count = 'SELECT COUNT(*) FROM {campaign_origins}';
-  
   $header = array();
   foreach ($columns as $key => $value) {
     $header[] = array(
@@ -242,7 +241,7 @@ function campaign_origins_show_origin_report() {
       if (!isset($page)) {
 	      $page = $arg;
 	    }
-    } 
+    }
     else {
       if (!isset($format)) {
 	      $format = $arg;
@@ -273,7 +272,7 @@ function campaign_origins_show_origin_report() {
   if ($_REQUEST['start']) {
     if ($_REQUEST['origin']) {
       $start = " AND t.created >= %d";
-      $params[] = strtotime($_REQUEST['start']); 
+      $params[] = strtotime($_REQUEST['start']);
     }
     else {
       $start = " WHERE t.created >= %d";
@@ -308,8 +307,8 @@ function campaign_origins_show_origin_report() {
         $record['node_id'] = 'http://' . $_SERVER['SERVER_NAME'] . '/' . drupal_lookup_path('alias', 'node/' . $record['node_id']);
       }
       else {
-        $record['node_id'] = l('http://' . $_SERVER['SERVER_NAME'] . '/' . drupal_lookup_path('alias', 'node/' . $record['node_id']), drupal_lookup_path('alias', 'node/' . $record['node_id'])); 
-      }  
+        $record['node_id'] = l('http://' . $_SERVER['SERVER_NAME'] . '/' . drupal_lookup_path('alias', 'node/' . $record['node_id']), drupal_lookup_path('alias', 'node/' . $record['node_id']));
+      }
     }
     else {
       $record['node_id'] = 'No data';
