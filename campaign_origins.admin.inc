@@ -239,21 +239,21 @@ function campaign_origins_show_origin_report() {
   foreach ($args as $arg) {
     if (is_numeric($arg)) {
       if (!isset($page)) {
-	      $page = $arg;
-	    }
+        $page = $arg;
+      }
     }
     else {
       if (!isset($format)) {
-	      $format = $arg;
-	    }
+        $format = $arg;
+      }
     }
   }
   if (!isset($page)) {
-	  $page = 1;
-	}
+    $page = 1;
+  }
   if (!isset($format)) {
-	  $format = 'table';
-	}
+    $format = 'table';
+  }
   $head = array(
     array('data' => t('Origin Code'), 'field' => 'origin'),
     array('data' => t('Origination Page'), 'field' => 'node_id'),
@@ -329,14 +329,14 @@ function campaign_origins_show_origin_report() {
       drupal_set_title(t('Campaign Origins Report'));
       $query = array();
       if ($_REQUEST['start']) {
-	      $query['start'] = $_REQUEST['start'];
-	    }
+        $query['start'] = $_REQUEST['start'];
+      }
       if ($_REQUEST['end']) {
-	      $query['end'] = $_REQUEST['end'];
-	    }
+        $query['end'] = $_REQUEST['end'];
+      }
       if ($_REQUEST['origin']) {
-	      $query['origin'] = $_REQUEST['origin'];
-	    }
+        $query['origin'] = $_REQUEST['origin'];
+      }
       global $pager_total_items;
       $summary = '<h3>Displaying ' . $pager_total_items[0] . ' records</h3>';
       if ($pager_total_items[0] > 0) {
