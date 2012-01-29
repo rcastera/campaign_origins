@@ -26,31 +26,31 @@ function campaign_origins_schema() {
   $schema['campaign_origins'] = array(
     'description' => 'Contains each origin code used for a campaign.',
       'fields' => array(
-        'id' => array(
-          'description' => 'Unique auto-increment record identifier.',
-          'type' => 'serial',
-          'unsigned' => TRUE,
-          'not null' => TRUE,
-        ),
-        'origin' => array(
-          'description' => 'The origin code.',
-          'type' => 'varchar',
-          'length' => '255',
-          'not null' => TRUE,
-        ),
-        'origin_description' => array(
-          'description' => 'Description for this origin code.',
-          'type' => 'varchar',
-          'length' => '255',
-          'not null' => FALSE,
-        ),
-        'created' => array(
-          'description' => 'When this origin code was created.',
-          'type' => 'int',
-          'size' => 'normal',
-          'not null' => TRUE,
-          'default' => 0,
-        ),
+      'id' => array(
+        'description' => 'Unique auto-increment record identifier.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'origin' => array(
+        'description' => 'The origin code.',
+        'type' => 'varchar',
+        'length' => '255',
+        'not null' => TRUE,
+      ),
+      'origin_description' => array(
+        'description' => 'Description for this origin code.',
+        'type' => 'varchar',
+        'length' => '255',
+        'not null' => FALSE,
+      ),
+      'created' => array(
+        'description' => 'When this origin code was created.',
+        'type' => 'int',
+        'size' => 'normal',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
       ),
     'primary key' => array('id'),
     'indexes' => array(
@@ -60,43 +60,43 @@ function campaign_origins_schema() {
   $schema['campaign_origins_tracking'] = array(
     'description' => 'Contains tracking information of campaign origination.',
       'fields' => array(
-        'id' => array(
-          'description' => 'Unique auto-increment record identifier.',
-          'type' => 'serial',
-          'unsigned' => TRUE,
-          'not null' => TRUE,
-        ),
-        'campaign_origins_id' => array(
-          'description' => 'The id of the campaign origins tracking table.',
-          'type' => 'int',
-          'size' => 'normal',
-          'not null' => TRUE,
-        ),
-        'node_id' => array(
-          'description' => 'The id of the node the campaign origins landed on.',
-          'type' => 'int',
-          'size' => 'normal',
-          'not null' => TRUE,
-        ),
-        'form_name' => array(
-          'description' => 'The name of the conversion form.',
-          'type' => 'varchar',
-          'length' => '255',
-          'not null' => FALSE,
-        ),
-        'form_record_id' => array(
-          'description' => 'The id of the record for the form submission.',
-          'type' => 'int',
-          'size' => 'normal',
-          'not null' => TRUE,
-        ),
-        'created' => array(
-          'description' => 'When this entry was created.',
-          'type' => 'int',
-          'size' => 'normal',
-          'not null' => TRUE,
-          'default' => 0,
-        ),
+      'id' => array(
+        'description' => 'Unique auto-increment record identifier.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'campaign_origins_id' => array(
+        'description' => 'The id of the campaign origins tracking table.',
+        'type' => 'int',
+        'size' => 'normal',
+        'not null' => TRUE,
+      ),
+      'node_id' => array(
+        'description' => 'The id of the node the campaign origins landed on.',
+        'type' => 'int',
+        'size' => 'normal',
+        'not null' => TRUE,
+      ),
+      'form_name' => array(
+        'description' => 'The name of the conversion form.',
+        'type' => 'varchar',
+        'length' => '255',
+        'not null' => FALSE,
+      ),
+      'form_record_id' => array(
+        'description' => 'The id of the record for the form submission.',
+        'type' => 'int',
+        'size' => 'normal',
+        'not null' => TRUE,
+      ),
+      'created' => array(
+        'description' => 'When this entry was created.',
+        'type' => 'int',
+        'size' => 'normal',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
       ),
     'primary key' => array('id'),
     'indexes' => array(

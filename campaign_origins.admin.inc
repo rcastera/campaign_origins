@@ -32,7 +32,7 @@ function campaign_origins_admin_settings_validate($form, &$form_state) {
 }
 
 /**
- * Form to document/add new origin code to be tracked. 
+ * Form to document/add new origin code to be tracked.
  */
 function campaign_origins_admin_add_origin() {
   drupal_set_title(t('Add Campaign Origin'));
@@ -83,7 +83,7 @@ function campaign_origins_admin_add_origin_submit($form, &$form_state) {
     return;
   }
   db_query("INSERT INTO {campaign_origins} (origin, origin_description, created) VALUES ('%s', '%s', %d)", $form_state['values']['campaign_origins_origin'], $form_state['values']['campaign_origins_description'], time());
-  drupal_set_message('Origin code added.', 'status');   
+  drupal_set_message('Origin code added.', 'status');
 }
 
 /**
@@ -98,8 +98,10 @@ function campaign_origins_view_origins() {
     'origin_description' => t('Description'),
     'created' => t('Created'),
   );
-  $sql = "SELECT * FROM {campaign_origins}";
-  $sql_count = "SELECT COUNT(*) FROM {campaign_origins}";
+
+  $sql = 'SELECT * FROM {campaign_origins}';
+  $sql_count = 'SELECT COUNT(*) FROM {campaign_origins}';
+  
   $header = array();
   foreach ($columns as $key => $value) {
     $header[] = array(
@@ -107,6 +109,7 @@ function campaign_origins_view_origins() {
       'field' => $key,
     );
   }
+
   $sql .= tablesort_sql($header);
   $resource = pager_query($sql, $number_results, 0, $sql_count, implode(', ', array_keys($columns)));
   $results = array();
@@ -114,8 +117,9 @@ function campaign_origins_view_origins() {
     $query['origin'] = $row['origin'];
     $row['origin'] = l($row['origin'], 'admin/reports/campaign-origins', array('query' => $query));
     $row['created'] = date('m-d-Y g:i A', $row['created']);
-    $results[] = $row; 
+    $results[] = $row;
   }
+
   $output = '';
   $output .= theme('table', $header, $results);
   $output .= theme('pager', NULL, $number_results, 0);
@@ -126,7 +130,7 @@ function campaign_origins_view_origins() {
  * Implements of hook_theme().
  */
 function campaign_origins_theme() {
-  return array (
+  return array(
     'campaign_origins_table' => array(
       'arguments' => array('table' => array()),
     ),
@@ -149,6 +153,7 @@ function theme_campaign_origins_table($table) {
     }
     $out .= '</tr></thead>';
   }
+
   $out .= '<tbody>';
   $zebra = 'odd';
   foreach ($table['#rows'] as $row) {
@@ -157,8 +162,9 @@ function theme_campaign_origins_table($table) {
       $out .= '<td>' . $row[$field] . '</td>';
     }
     $out .= '</tr>';
-    $zebra = ($zebra=='odd')?'even':'odd';
+    $zebra = ($zebra == 'odd')? 'even':'odd';
   }
+
   $out .= '</tbody>';
   $out .= '</table>';
   return $out;
@@ -197,36 +203,29 @@ function theme_campaign_origins_csv($head, $rows) {
 function campaign_origins_time_range_form() {
   $form = '<form id="reports-form-time-range" name="reports-form-time-range" method="get" accept-charset="UTF-8" action="" style="margin: 10px 0px;">';
   $form .= '<div>';
-  
   $form .= '<div id="edit-origin-wrapper" class="form-item">';
   $form .= '<label for="edit-origin">Origin Code: </label>';
   $form .= '<input id="edit-origin" class="form-text" type="text" value="' . $_REQUEST['origin'] . '" size="60" name="origin" maxlength="128"/>';
   $form .= '<div class="description">Enter an Origin code to search for</div>';
   $form .= '</div>';
-  
   $form .= '<div id="edit-start-wrapper" class="form-item">';
   $form .= '<label for="edit-start">Start: </label>';
   $form .= '<input id="edit-start" class="form-text" type="text" value="' . $_REQUEST['start'] . '" size="60" name="start" maxlength="128"/>';
   $form .= '<div class="description">Enter a date in (YYYY-MM-DD) format</div>';
   $form .= '</div>';
-  
   $form .= '<div id="edit-end-wrapper" class="form-item">';
   $form .= '<label for="edit-end">End: </label>';
   $form .= '<input id="edit-end" class="form-text" type="text" value="' . $_REQUEST['end'] . '" size="60" name="end" maxlength="128"/>';
   $form .= '<div class="description">Enter a date in (YYYY-MM-DD) format</div>';
   $form .= '</div>';
-  
   $form .= '<input id="edit-submit" class="form-submit" type="submit" value="Filter" />';
   $form .= '<input id="edit-rest" class="form-submit" type="submit" value="Reset" onclick="location.href=\'/admin/reports/campaign-origins\'; return false;" />';
-  
-  
   if ($_REQUEST['sort']) {
     $form .= '<input type="hidden" name="sort" value="' . $_REQUEST['sort'] . '">';
   }
   if ($_REQUEST['order']) {
     $form .= '<input type="hidden" name="order" value="' . $_REQUEST['order'] . '">';
   }
-  
   $form .= '</div>';
   $form .= '</form>';
   return $form;
@@ -240,10 +239,14 @@ function campaign_origins_show_origin_report() {
   $args = func_get_args();
   foreach ($args as $arg) {
     if (is_numeric($arg)) {
-      if (!isset($page)) {$page = $arg;}
+      if (!isset($page)) {
+	      $page = $arg;
+	    }
     } 
     else {
-      if (!isset($format)) {$format = $arg;}
+      if (!isset($format)) {
+	      $format = $arg;
+	    }
     }
   }
   if (!isset($page)) {
@@ -266,6 +269,7 @@ function campaign_origins_show_origin_report() {
     $origin = " WHERE o.origin = '%s'";
     $params[] = $_REQUEST['origin'];
   }
+
   if ($_REQUEST['start']) {
     if ($_REQUEST['origin']) {
       $start = " AND t.created >= %d";
@@ -276,17 +280,18 @@ function campaign_origins_show_origin_report() {
       $params[] = strtotime($_REQUEST['start']);
     }
   }
+
   if ($_REQUEST['end']) {
     $end = " AND t.created <= %d";
     $params[] = strtotime($_REQUEST['end'] . " +1 day");
   }
   if ($_REQUEST['origin']) {
-    $sql = "SELECT o.origin, t.node_id, t.form_name, t.form_record_id, t.created FROM {campaign_origins} o LEFT JOIN {campaign_origins_tracking} t ON t.campaign_origins_id = o.id" . $origin . $start . $end;
+    $sql = 'SELECT o.origin, t.node_id, t.form_name, t.form_record_id, t.created FROM {campaign_origins} o LEFT JOIN {campaign_origins_tracking} t ON t.campaign_origins_id = o.id' . $origin . $start . $end;
     $count = "SELECT COUNT(*) FROM {campaign_origins} o LEFT JOIN {campaign_origins_tracking} t ON t.campaign_origins_id = o.id" . $origin . $start . $end;  
   }
   else {
-    $sql = "SELECT o.origin, t.node_id, t.form_name, t.form_record_id, t.created FROM {campaign_origins} o LEFT JOIN {campaign_origins_tracking} t ON t.campaign_origins_id = o.id" . $start . $end;
-    $count = "SELECT COUNT(*) FROM {campaign_origins} o LEFT JOIN {campaign_origins_tracking} t ON t.campaign_origins_id = o.id" . $start . $end;
+    $sql = 'SELECT o.origin, t.node_id, t.form_name, t.form_record_id, t.created FROM {campaign_origins} o LEFT JOIN {campaign_origins_tracking} t ON t.campaign_origins_id = o.id' . $start . $end;
+    $count = 'SELECT COUNT(*) FROM {campaign_origins} o LEFT JOIN {campaign_origins_tracking} t ON t.campaign_origins_id = o.id' . $start . $end;
   }
   if ($format == 'csv') {
     $result = db_query($sql, $params);
@@ -296,6 +301,7 @@ function campaign_origins_show_origin_report() {
     $tablesort = tablesort_sql($head);
     $result = pager_query($sql.$tablesort, $limit, 0, $count, $params);
   }
+
   while ($record = db_fetch_array($result)) {
     if ($record['node_id']) {
       if ($format == 'csv') {
@@ -311,11 +317,12 @@ function campaign_origins_show_origin_report() {
     $record['created'] = ($record['created'] == NULL) ? 'No data':date('m-d-Y g:i A', $record['created']);
     $rows[] = $record;
   }
+
   switch ($format) {
     case 'csv':
-      drupal_set_header("Cache-Control: no-store, no-cache, must-revalidate");
-      drupal_set_header("Content-type: application/csv");
-      drupal_set_header("Content-Disposition: attachment; filename=\"origins.csv\"");
+      drupal_set_header('Cache-Control: no-store, no-cache, must-revalidate');
+      drupal_set_header('Content-type: application/csv');
+      drupal_set_header('Content-Disposition: attachment; filename=\"origins.csv\"');
       print theme('reports_csv', $head, $rows);
       exit;
       
