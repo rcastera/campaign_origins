@@ -315,7 +315,7 @@ function campaign_origins_show_origin_report() {
         $record['node_id'] = 'http://' . $_SERVER['SERVER_NAME'] . '/' . drupal_lookup_path('alias', 'node/' . $record['node_id']);
       }
       else {
-        $record['node_id'] = l('http://' . $_SERVER['SERVER_NAME'] . '/' . drupal_lookup_path('alias', 'node/' . $record['node_id']), drupal_lookup_path('alias', 'node/' . $record['node_id']));
+        $record['node_id'] = l(t('http://' . $_SERVER['SERVER_NAME'] . '/' . drupal_lookup_path('alias', 'node/' . $record['node_id'])), drupal_lookup_path('alias', 'node/' . $record['node_id']));
       }
     }
     else {
