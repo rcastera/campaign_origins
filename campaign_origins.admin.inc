@@ -170,6 +170,9 @@ function theme_campaign_origins_table($table) {
 }
 
 if (!function_exists('str_putcsv')) {
+  /**
+   * Define str_putcsv if it does not exist.
+   */
   function str_putcsv($input, $delimiter = ',', $enclosure = '"') {
     $fp = fopen('php://temp', 'r+');
     fputcsv($fp, $input, $delimiter, $enclosure);
@@ -200,33 +203,38 @@ function theme_campaign_origins_csv($head, $rows) {
  * Time range form.
  */
 function campaign_origins_time_range_form() {
-  $form = '<form id="reports-form-time-range" name="reports-form-time-range" method="get" accept-charset="UTF-8" action="" style="margin: 10px 0px;">';
-  $form .= '<div>';
-  $form .= '<div id="edit-origin-wrapper" class="form-item">';
-  $form .= '<label for="edit-origin">Origin Code: </label>';
-  $form .= '<input id="edit-origin" class="form-text" type="text" value="' . $_REQUEST['origin'] . '" size="60" name="origin" maxlength="128"/>';
-  $form .= '<div class="description">Enter an Origin code to search for</div>';
-  $form .= '</div>';
-  $form .= '<div id="edit-start-wrapper" class="form-item">';
-  $form .= '<label for="edit-start">Start: </label>';
-  $form .= '<input id="edit-start" class="form-text" type="text" value="' . $_REQUEST['start'] . '" size="60" name="start" maxlength="128"/>';
-  $form .= '<div class="description">Enter a date in (YYYY-MM-DD) format</div>';
-  $form .= '</div>';
-  $form .= '<div id="edit-end-wrapper" class="form-item">';
-  $form .= '<label for="edit-end">End: </label>';
-  $form .= '<input id="edit-end" class="form-text" type="text" value="' . $_REQUEST['end'] . '" size="60" name="end" maxlength="128"/>';
-  $form .= '<div class="description">Enter a date in (YYYY-MM-DD) format</div>';
-  $form .= '</div>';
-  $form .= '<input id="edit-submit" class="form-submit" type="submit" value="Filter" />';
-  $form .= '<input id="edit-rest" class="form-submit" type="submit" value="Reset" onclick="location.href=\'/admin/reports/campaign-origins\'; return false;" />';
-  if ($_REQUEST['sort']) {
-    $form .= '<input type="hidden" name="sort" value="' . $_REQUEST['sort'] . '">';
-  }
-  if ($_REQUEST['order']) {
-    $form .= '<input type="hidden" name="order" value="' . $_REQUEST['order'] . '">';
-  }
-  $form .= '</div>';
-  $form .= '</form>';
+  $form['campaign_origins']['origin'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Origin Code'),
+    '#description' => t('Enter an Origin code to search for'),
+    '#size' => 60,
+    '#maxlength' => 255,
+    '#required' => TRUE,
+    '#value' => $_REQUEST['origin'],
+  );
+  $form['campaign_origins']['start'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Start'),
+    '#description' => t('Enter a date in (YYYY-MM-DD) format'),
+    '#size' => 60,
+    '#maxlength' => 255,
+    '#required' => FALSE,
+    '#value' => $_REQUEST['start'],
+  );
+  $form['campaign_origins']['end'] = array(
+    '#type' => 'textfield',
+    '#title' => t('End'),
+    '#description' => t('Enter a date in (YYYY-MM-DD) format'),
+    '#size' => 60,
+    '#maxlength' => 255,
+    '#required' => FALSE,
+    '#value' => $_REQUEST['end'],
+  );
+  $form['#method'] = 'get';
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Filter'),
+  );
   return $form;
 }
 
@@ -286,7 +294,7 @@ function campaign_origins_show_origin_report() {
   }
   if ($_REQUEST['origin']) {
     $sql = 'SELECT o.origin, t.node_id, t.form_name, t.form_record_id, t.created FROM {campaign_origins} o LEFT JOIN {campaign_origins_tracking} t ON t.campaign_origins_id = o.id' . $origin . $start . $end;
-    $count = "SELECT COUNT(*) FROM {campaign_origins} o LEFT JOIN {campaign_origins_tracking} t ON t.campaign_origins_id = o.id" . $origin . $start . $end;  
+    $count = "SELECT COUNT(*) FROM {campaign_origins} o LEFT JOIN {campaign_origins_tracking} t ON t.campaign_origins_id = o.id" . $origin . $start . $end;
   }
   else {
     $sql = 'SELECT o.origin, t.node_id, t.form_name, t.form_record_id, t.created FROM {campaign_origins} o LEFT JOIN {campaign_origins_tracking} t ON t.campaign_origins_id = o.id' . $start . $end;
@@ -294,11 +302,11 @@ function campaign_origins_show_origin_report() {
   }
   if ($format == 'csv') {
     $result = db_query($sql, $params);
-  } 
+  }
   else {
     $limit = 20;
     $tablesort = tablesort_sql($head);
-    $result = pager_query($sql.$tablesort, $limit, 0, $count, $params);
+    $result = pager_query($sql . $tablesort, $limit, 0, $count, $params);
   }
 
   while ($record = db_fetch_array($result)) {
@@ -324,7 +332,6 @@ function campaign_origins_show_origin_report() {
       drupal_set_header('Content-Disposition: attachment; filename=\"origins.csv\"');
       print theme('reports_csv', $head, $rows);
       exit;
-      
     default:
       drupal_set_title(t('Campaign Origins Report'));
       $query = array();
@@ -340,12 +347,12 @@ function campaign_origins_show_origin_report() {
       global $pager_total_items;
       $summary = '<h3>Displaying ' . $pager_total_items[0] . ' records</h3>';
       if ($pager_total_items[0] > 0) {
-        $page = $_REQUEST['page'] > 0?(int)$_REQUEST['page']+1:1;
+        $page = ($_REQUEST['page'] > 0)? ((int) $_REQUEST['page'] + 1):1;
         $top = $page * $limit;
-        $bottom = $top-$limit+1;
+        $bottom = ($top - $limit + 1);
         $summary = '<h3>Displaying ' . $bottom . '-' . $top . ' of ' . $pager_total_items[0] . ' records</h3>';
       }
-      return $summary . '<p>' . l(t('Download as CSV'), 'admin/reports/campaign-origins/csv', array('query' => $query)) . '</p>' . campaign_origins_time_range_form() . theme('table', $head, $rows) . theme('pager', NULL, $limit, 0, NULL, 5);
+      return $summary . '<p>' . l(t('Download as CSV'), 'admin/reports/campaign-origins/csv', array('query' => $query)) . '</p>' . drupal_get_form('campaign_origins_time_range_form') . theme('table', $head, $rows) . theme('pager', NULL, $limit, 0, NULL, 5);
       break;
   }
   return '';
